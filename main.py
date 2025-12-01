@@ -1,6 +1,20 @@
+import logging
+
+logging.basicConfig(
+    level=logging.DEBUG,
+    format='[%(levelname)s] - %(asctime)s - %(message)s',
+    datefmt='%Y-%m-%d %H:%M:%S',
+)
+
+logger = logging.getLogger(__name__)
+
+
 def main():
-    print('Hello from casino!')
+    logger.info('Hello from casino!')
 
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    finally:
+        logger.info('Goodbye!')
