@@ -1,9 +1,8 @@
-from dataclasses import dataclass
+from typing import Protocol
 
 
-@dataclass
-class Chip:
-    value: int
+class Entity(Protocol):
+    name: str
 
-    def __add__(self, other: 'Chip') -> 'Chip':
-        return Chip(self.value + other.value)
+    def tick(self) -> None:
+        raise NotImplementedError
