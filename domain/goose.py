@@ -1,16 +1,17 @@
 from dataclasses import dataclass
 from typing import Protocol
 
+from domain.entity import Entity
 from domain.player import Player
 
 
-class Goose(Protocol):
+class Goose(Entity, Protocol):
     name: str
     lucky: int
     balance: int
 
     def act_on_player(self, player: Player) -> None: ...
-    def act_on_goose(self, goose: 'Goose') -> None: ...
+    def act_self(self, goose: 'Goose') -> None: ...
 
     def __add__(self, other: 'Goose') -> 'FlockGoose': ...
 
@@ -25,7 +26,7 @@ class FlockGoose:
 
     def act_on_goose(self, goose: Goose) -> None:
         for g in self.geese:
-            g.act_on_goose(goose)
+            g.act_self(goose)
 
     def __add__(self, other: Goose) -> 'FlockGoose':
         return FlockGoose(
