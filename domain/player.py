@@ -1,4 +1,10 @@
 from dataclasses import dataclass
+from typing import Protocol
+
+
+class BalanceInterface(Protocol):
+    def change_balance(self, delta: int) -> None:
+        raise NotImplementedError
 
 
 @dataclass

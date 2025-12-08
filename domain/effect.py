@@ -1,6 +1,8 @@
+from dataclasses import dataclass
 from typing import Protocol
 
 from domain.goose import Goose
+from domain.player import BalanceInterface, Player
 
 
 class Effect(Protocol):
@@ -14,11 +16,6 @@ class Effect(Protocol):
         raise NotImplementedError
 
 
-class BalanceInterface(Protocol):
-    def change_balance(self, delta: int) -> None:
-        raise NotImplementedError
-
-
 class OnceStealBalance:
     def __init__(self, source: Goose, target: BalanceInterface, delta: int) -> None:
         self._source = source
@@ -28,4 +25,16 @@ class OnceStealBalance:
     def on_tick(self) -> None:
         if self.duration > 0:
             self._target.change_balance(self._delta)
+        self.duration -= 1
+
+
+@dataclass
+class StunEffect:
+    source: Goose
+    target: Goose | Player
+    duration: int
+
+    def on_tick(self) -> None:
+        # Просто тикает таймер
+        # Casino проверяет наличие StunEffect, чтобы запретить действия
         self.duration -= 1
