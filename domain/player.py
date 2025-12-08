@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 from typing import Protocol
 
+from domain.entity import Entity
+
 
 class BalanceInterface(Protocol):
     def change_balance(self, delta: int) -> None:
@@ -8,7 +10,7 @@ class BalanceInterface(Protocol):
 
 
 @dataclass
-class Player:
+class Player(Entity):
     name: str
     balance: int = 0
     lucky: int = 0
