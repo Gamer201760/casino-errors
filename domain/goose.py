@@ -6,7 +6,7 @@ from domain.entity import Entity
 from domain.player import Player
 
 
-class Goose(Protocol):
+class Goose(Entity, Protocol):
     name: str
     lucky: int
 
@@ -17,7 +17,7 @@ class Goose(Protocol):
 
 
 @dataclass
-class WarGoose(Entity):
+class WarGoose(Goose):
     name: str
     strength: int
     lucky: int = 0
@@ -53,7 +53,7 @@ class WarGoose(Entity):
 
 
 @dataclass
-class HonkGoose(Entity):
+class HonkGoose(Goose):
     name: str
     honk_volume: int
     lucky: int = 0
@@ -80,7 +80,7 @@ class HonkGoose(Entity):
     def __add__(self, other: Goose) -> Goose: ...
 
 
-class FlockGoose(Entity):
+class FlockGoose(Goose):
     def __init__(self, geese: list[Goose]) -> None:
         self._geese = geese
 
@@ -101,3 +101,69 @@ class FlockGoose(Entity):
     @property
     def _war_geese(self) -> list[WarGoose]:
         return [g for g in self._geese if isinstance(g, WarGoose)]
+
+    def _avg_honk_volume(self) -> int:
+        honks = self._honk_geese
+        if not honks:
+            return 0
+        total = sum(h.honk_volume for h in honks)
+        return total // len(honks)
+
+    def _total_strength(self) -> int:
+        return sum(w.strength for w in self._war_geese)
+
+    def act_player(self, player: Player) -> list[Effect]:
+        effects: list[Effect] = []
+
+        # 1. Оглушение игрока на среднюю громкость
+        avg_honk = self._avg_honk_volume()
+        if avg_honk > 0:
+            stun_turns = max(1, avg_honk // 10)
+            effects.append(
+                StunEffect(source=self, target=player, duration=stun_turns),
+            )
+
+        # 2. Игрок теряет деньги = суммарная сила всех атакующих гусей
+        total_str = self._total_strength()
+        if total_str > 0:
+            effects.append(
+                OnceStealBalance(source=self, target=player, delta=-total_str),
+            )
+
+            # Деньги распределяются между WarGoose внутри стаи
+            # Можно равномерно:
+            share, rem = (
+                divmod(total_str, len(self._war_geese)) if self._war_geese else (0, 0)
+            )
+            for i, w in enumerate(self._war_geese):
+                delta = share + (1 if i < rem else 0)
+                effects.append(
+                    OnceStealBalance(source=self, target=w, delta=delta),
+                )
+
+        return effects
+
+    def act_self(self) -> list[Effect]:
+        effects: list[Effect] = []
+
+        avg_honk = self._avg_honk_volume()
+        total_str = self._total_strength()
+
+        # 1. Оглушаем каждого гуся стаи
+        if avg_honk > 0:
+            stun_turns = max(1, avg_honk // 10)
+            for g in self._geese:
+                effects.append(
+                    StunEffect(source=self, target=g, duration=stun_turns),
+                )
+
+        # 2. У каждого атакующего гуся забираем деньги равные суммарной силе
+        if total_str > 0:
+            for w in self._war_geese:
+                lost = min(w.balance, total_str)
+                if lost > 0:
+                    effects.append(
+                        OnceStealBalance(source=self, target=w, delta=-lost),
+                    )
+
+        return effects
