@@ -49,7 +49,10 @@ class WarGoose(Goose):
             OnceStealBalance(source=self, target=self, delta=-lost),
         ]
 
-    def __add__(self, other: Goose) -> Goose: ...
+    def __add__(self, other: Goose) -> Goose:
+        if isinstance(other, FlockGoose):
+            return other + self
+        return FlockGoose(self.name, [self, other])
 
 
 @dataclass
@@ -77,22 +80,19 @@ class HonkGoose(Goose):
             StunEffect(source=self, target=self, duration=self._stun_turns()),
         ]
 
-    def __add__(self, other: Goose) -> Goose: ...
+    def __add__(self, other: Goose) -> Goose:
+        if isinstance(other, FlockGoose):
+            return other + self
+        return FlockGoose(self.name, [self, other])
 
 
 class FlockGoose(Goose):
-    def __init__(self, geese: list[Goose]) -> None:
+    def __init__(self, name: str, geese: list[Goose]) -> None:
         self._geese = geese
-
-    @property
-    def name(self) -> str:
-        return self._geese[0].name if self._geese else 'Empty flock'
-
-    @property
-    def lucky(self) -> int:
-        if not self._geese:
-            return 0
-        return sum(g.lucky for g in self._geese) // len(self._geese)
+        self.lucky = 0
+        self.name = name
+        self._strength = 0
+        self._honk_volume = 0
 
     @property
     def _honk_geese(self) -> list[HonkGoose]:
@@ -102,38 +102,27 @@ class FlockGoose(Goose):
     def _war_geese(self) -> list[WarGoose]:
         return [g for g in self._geese if isinstance(g, WarGoose)]
 
-    def _avg_honk_volume(self) -> int:
-        honks = self._honk_geese
-        if not honks:
-            return 0
-        total = sum(h.honk_volume for h in honks)
-        return total // len(honks)
-
-    def _total_strength(self) -> int:
-        return sum(w.strength for w in self._war_geese)
-
     def act_player(self, player: Player) -> list[Effect]:
         effects: list[Effect] = []
 
         # 1. Оглушение игрока на среднюю громкость
-        avg_honk = self._avg_honk_volume()
-        if avg_honk > 0:
-            stun_turns = max(1, avg_honk // 10)
+        if self._honk_volume > 0:
+            stun_turns = max(1, self._honk_volume // 10)
             effects.append(
                 StunEffect(source=self, target=player, duration=stun_turns),
             )
 
         # 2. Игрок теряет деньги = суммарная сила всех атакующих гусей
-        total_str = self._total_strength()
-        if total_str > 0:
+        steal = min(self._strength, player.balance)
+
+        if steal > 0:
             effects.append(
-                OnceStealBalance(source=self, target=player, delta=-total_str),
+                OnceStealBalance(source=self, target=player, delta=-steal),
             )
 
-            # Деньги распределяются между WarGoose внутри стаи
-            # Можно равномерно:
+            # Деньги распределяются между WarGoose внутри стаи равномерно
             share, rem = (
-                divmod(total_str, len(self._war_geese)) if self._war_geese else (0, 0)
+                divmod(steal, len(self._war_geese)) if self._war_geese else (0, 0)
             )
             for i, w in enumerate(self._war_geese):
                 delta = share + (1 if i < rem else 0)
@@ -146,24 +135,30 @@ class FlockGoose(Goose):
     def act_self(self) -> list[Effect]:
         effects: list[Effect] = []
 
-        avg_honk = self._avg_honk_volume()
-        total_str = self._total_strength()
-
         # 1. Оглушаем каждого гуся стаи
-        if avg_honk > 0:
-            stun_turns = max(1, avg_honk // 10)
+        if self._honk_volume > 0:
+            stun_turns = max(1, self._honk_volume // 10)
             for g in self._geese:
                 effects.append(
                     StunEffect(source=self, target=g, duration=stun_turns),
                 )
 
         # 2. У каждого атакующего гуся забираем деньги равные суммарной силе
-        if total_str > 0:
+        if self._strength > 0:
             for w in self._war_geese:
-                lost = min(w.balance, total_str)
+                lost = min(w.balance, self._strength)
                 if lost > 0:
                     effects.append(
                         OnceStealBalance(source=self, target=w, delta=-lost),
                     )
 
         return effects
+
+    def __add__(self, other: 'Goose') -> 'Goose':
+        self._geese.append(other)
+        self.lucky += int(other.lucky / len(self._geese))
+        if isinstance(other, WarGoose):
+            self._strength += other.strength
+        elif isinstance(other, HonkGoose):
+            self._honk_volume += int(other.honk_volume / len(self._geese))
+        return self

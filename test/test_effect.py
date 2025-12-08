@@ -1,8 +1,8 @@
 import pytest
 
-from domain.honk_goose import HonkGoose, StunEffect
+from domain.effect import OnceStealBalance, StunEffect
+from domain.goose import HonkGoose, WarGoose
 from domain.player import Player
-from domain.war_goose import OnceStealBalance, WarGoose
 
 
 @pytest.mark.parametrize(

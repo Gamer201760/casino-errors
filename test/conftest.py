@@ -1,8 +1,7 @@
 import pytest
 
-from domain.honk_goose import HonkGoose
+from domain.goose import HonkGoose, WarGoose
 from domain.player import Player
-from domain.war_goose import WarGoose
 
 
 @pytest.fixture
