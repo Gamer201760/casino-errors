@@ -27,22 +27,17 @@ def test_once_steal_balance_ticks(
     expected_balance_after_first_tick: int,
     expected_balance_after_second_tick: int,
 ) -> None:
-    # arrange
     player = Player(name='p', balance=start_balance)
     goose = WarGoose(name='war', strength=10)
     effect = OnceStealBalance(source=goose, target=player, delta=delta)
 
-    # act
     effect.on_tick()
 
-    # assert
     assert player.balance == expected_balance_after_first_tick
     assert effect.duration == 0
 
-    # act
     effect.on_tick()
 
-    # assert
     assert player.balance == expected_balance_after_second_tick
     assert effect.duration == -1
 
