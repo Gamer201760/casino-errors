@@ -5,6 +5,8 @@ from domain.entity import Entity
 
 
 class BalanceInterface(Protocol):
+    balance: int
+
     def change_balance(self, delta: int) -> None:
         raise NotImplementedError
 

@@ -107,6 +107,18 @@ class FlockGoose(Goose):
         for g in geese:
             self._add_goose_incremental(g)
 
+    @property
+    def strength(self) -> int:
+        return self._strength
+
+    @property
+    def honk_volume(self) -> int:
+        return self._honk_volume
+
+    @property
+    def count(self) -> int:
+        return self._count
+
     def _add_goose_incremental(self, g: Goose) -> None:
         self.geese.append(g)
         self._count += 1

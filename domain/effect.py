@@ -35,6 +35,18 @@ class OnceStealBalance:
         self._delta = delta
         self.duration = 1
 
+    @property
+    def source(self) -> Entity:
+        return self._source
+
+    @property
+    def target(self) -> Entity:
+        return self._target
+
+    @property
+    def delta(self) -> int:
+        return self._delta
+
     def on_tick(self) -> None:
         if self.duration > 0:
             self._target.change_balance(self._delta)
