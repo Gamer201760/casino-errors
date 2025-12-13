@@ -1,15 +1,16 @@
-from collections.abc import MutableMapping
 from logging import getLogger
 from typing import Iterator
+
+from usecase.interface import CasinoBalanceProtocol
 
 logger = getLogger(__name__)
 
 
-class InMemoryCasinoBalance(MutableMapping[str, int]):
+class InMemoryCasinoBalance(CasinoBalanceProtocol):
     """
-    Реализация словарной коллекции балансов.
-    Хранит баланс (int) по имени (str).
-    Логирует изменения при записи (__setitem__).
+    Реализация словарной коллекции балансов
+    Хранит баланс по имени
+    Логирует изменения при записи
     """
 
     def __init__(self) -> None:

@@ -2,6 +2,8 @@ import pytest
 
 from domain.goose import FlockGoose, HonkGoose, WarGoose
 from domain.player import Player
+from repository.casino_balance import InMemoryCasinoBalance
+from usecase.interface import CasinoBalanceProtocol
 
 
 @pytest.fixture
@@ -72,3 +74,8 @@ def rich_player() -> Player:
 @pytest.fixture
 def poor_player() -> Player:
     return Player(name='poor', balance=5, lucky=0)
+
+
+@pytest.fixture
+def balance_store() -> CasinoBalanceProtocol:
+    return InMemoryCasinoBalance()
