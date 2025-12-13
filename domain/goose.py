@@ -1,11 +1,15 @@
 from dataclasses import dataclass
-from typing import Protocol
+from logging import getLogger
+from typing import Protocol, runtime_checkable
 
 from domain.effect import Effect, OnceStealBalance, StunEffect
 from domain.entity import Entity
 from domain.player import Player
 
+logger = getLogger(__name__)
 
+
+@runtime_checkable
 class Goose(Entity, Protocol):
     name: str
     lucky: int
@@ -34,6 +38,9 @@ class WarGoose(Goose):
         """
         steal = min(self.strength, player.balance)
 
+        logger.info(
+            f'атакующий гусь {self.name} зарезал игрока {player.name}, забрал {self.strength} денег'
+        )
         return [
             # игрок теряет деньги
             OnceStealBalance(source=self, target=player, delta=-steal),
@@ -45,6 +52,8 @@ class WarGoose(Goose):
         lost = min(self.strength, self.balance)
         if lost <= 0:
             return []
+
+        logger.info(f'атакующий гусь {self.name} случайно зарезал сам себя')
         return [
             OnceStealBalance(source=self, target=self, delta=-lost),
         ]
@@ -63,7 +72,7 @@ class HonkGoose(Goose):
     balance: int = 0
 
     def _stun_turns(self) -> int:
-        return max(1, self.honk_volume // 10)
+        return max(2, self.honk_volume // 10)
 
     def act_player(self, player: Player) -> list[Effect]:
         """
@@ -71,11 +80,18 @@ class HonkGoose(Goose):
         на него влияет удача гуся - удача игрока,
         иначе оглушает самого себя
         """
+        logger.info(
+            f'кричащий гусь {self.name} оглушил игрока {player.name}, он становиться неактивным на {self._stun_turns() - 1} ходов'
+        )
+
         return [
             StunEffect(source=self, target=player, duration=self._stun_turns()),
         ]
 
     def act_self(self) -> list[Effect]:
+        logger.info(
+            f'кричащий гусь {self.name} случайно оглушил сам себя, он становиться неактивным на {self._stun_turns() - 1} ходов'
+        )
         return [
             StunEffect(source=self, target=self, duration=self._stun_turns()),
         ]
@@ -88,7 +104,7 @@ class HonkGoose(Goose):
 
 class FlockGoose(Goose):
     def __init__(self, name: str, geese: list[Goose]) -> None:
-        self.name = name
+        self.name = 'Стая' + name
 
         self.geese: list[Goose] = []
         self.war: list[WarGoose] = []
@@ -196,6 +212,9 @@ class FlockGoose(Goose):
                 effects.append(
                     StunEffect(source=self, target=g, duration=stun_turns),
                 )
+            effects.append(
+                StunEffect(source=self, target=self, duration=stun_turns),
+            )
 
         # у каждого WarGoose забираем min(balance, _strength)
         if self._strength > 0:

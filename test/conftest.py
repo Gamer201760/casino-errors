@@ -1,7 +1,12 @@
 import pytest
 
+from domain.engine import EffectEngine
 from domain.goose import FlockGoose, HonkGoose, WarGoose
 from domain.player import Player
+from repository.casino_balance import InMemoryCasinoBalance
+from repository.goose_collection import InMemoryGooseCollection
+from repository.player_collection import InMemoryPlayerCollection
+from usecase.interface import CasinoBalance, GooseCollection, PlayerCollection
 
 
 @pytest.fixture
@@ -72,3 +77,23 @@ def rich_player() -> Player:
 @pytest.fixture
 def poor_player() -> Player:
     return Player(name='poor', balance=5, lucky=0)
+
+
+@pytest.fixture
+def balance_store() -> CasinoBalance:
+    return InMemoryCasinoBalance()
+
+
+@pytest.fixture
+def player_collection() -> PlayerCollection:
+    return InMemoryPlayerCollection()
+
+
+@pytest.fixture
+def goose_collection() -> GooseCollection:
+    return InMemoryGooseCollection()
+
+
+@pytest.fixture
+def engine() -> EffectEngine:
+    return EffectEngine()

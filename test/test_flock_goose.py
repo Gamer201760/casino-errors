@@ -83,12 +83,12 @@ def test_flock_act_self_stuns_all_geese(
     effects: list[Effect] = flock_four.act_self()
 
     stun_effects = get_stun_effects(effects)
-    assert len(stun_effects) == len(flock_four.geese)
+    assert len(stun_effects) == len(flock_four.geese) + 1
 
     expected_turns = max(1, flock_four.honk_volume // 10)
     for effect in stun_effects:
         assert effect.source is flock_four
-        assert effect.target in flock_four.geese
+        assert effect.target in [*flock_four.geese, flock_four]
         assert effect.duration == expected_turns
 
 

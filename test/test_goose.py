@@ -58,12 +58,13 @@ def test_wargoose_act_self(goose_balance, strength, expected_lost):
 @pytest.mark.parametrize(
     'honk_volume, expected_turns',
     [
-        (1, 1),
-        (5, 1),
-        (10, 1),
-        (15, 1),
+        (1, 2),
+        (5, 2),
+        (10, 2),
+        (15, 2),
         (20, 2),
         (35, 3),
+        (135, 13),
     ],
 )
 def test_honk_goose_stun_turns(honk_volume, expected_turns):
