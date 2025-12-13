@@ -1,5 +1,6 @@
 import pytest
 
+from domain.engine import EffectEngine
 from domain.goose import FlockGoose, HonkGoose, WarGoose
 from domain.player import Player
 from repository.casino_balance import InMemoryCasinoBalance
@@ -91,3 +92,8 @@ def player_collection() -> PlayerCollection:
 @pytest.fixture
 def goose_collection() -> GooseCollection:
     return InMemoryGooseCollection()
+
+
+@pytest.fixture
+def engine() -> EffectEngine:
+    return EffectEngine()
