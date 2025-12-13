@@ -1,4 +1,4 @@
-.PHONY: test lint typecheck run pre-commit 
+.PHONY: test lint typecheck run pre-commit install
 
 help:
 	@echo "Доступные команды:"
