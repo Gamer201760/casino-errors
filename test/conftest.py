@@ -3,7 +3,9 @@ import pytest
 from domain.goose import FlockGoose, HonkGoose, WarGoose
 from domain.player import Player
 from repository.casino_balance import InMemoryCasinoBalance
-from usecase.interface import CasinoBalanceProtocol
+from repository.goose_collection import InMemoryGooseCollection
+from repository.player_collection import InMemoryPlayerCollection
+from usecase.interface import CasinoBalanceProtocol, GooseCollection, PlayerCollection
 
 
 @pytest.fixture
@@ -79,3 +81,13 @@ def poor_player() -> Player:
 @pytest.fixture
 def balance_store() -> CasinoBalanceProtocol:
     return InMemoryCasinoBalance()
+
+
+@pytest.fixture
+def player_collection() -> PlayerCollection:
+    return InMemoryPlayerCollection()
+
+
+@pytest.fixture
+def goose_collection() -> GooseCollection:
+    return InMemoryGooseCollection()
