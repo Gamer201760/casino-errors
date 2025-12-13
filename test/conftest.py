@@ -5,7 +5,7 @@ from domain.player import Player
 from repository.casino_balance import InMemoryCasinoBalance
 from repository.goose_collection import InMemoryGooseCollection
 from repository.player_collection import InMemoryPlayerCollection
-from usecase.interface import CasinoBalanceProtocol, GooseCollection, PlayerCollection
+from usecase.interface import CasinoBalance, GooseCollection, PlayerCollection
 
 
 @pytest.fixture
@@ -79,7 +79,7 @@ def poor_player() -> Player:
 
 
 @pytest.fixture
-def balance_store() -> CasinoBalanceProtocol:
+def balance_store() -> CasinoBalance:
     return InMemoryCasinoBalance()
 
 

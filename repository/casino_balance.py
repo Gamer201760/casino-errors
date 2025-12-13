@@ -1,12 +1,12 @@
 from logging import getLogger
 from typing import Iterator
 
-from usecase.interface import CasinoBalanceProtocol
+from usecase.interface import CasinoBalance
 
 logger = getLogger(__name__)
 
 
-class InMemoryCasinoBalance(CasinoBalanceProtocol):
+class InMemoryCasinoBalance(CasinoBalance):
     """
     Реализация словарной коллекции балансов
     Хранит баланс по имени

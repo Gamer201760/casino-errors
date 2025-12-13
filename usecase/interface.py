@@ -36,7 +36,7 @@ class GooseCollection(Protocol):
     def __getitem__(self, index: int | slice) -> Goose | list[Goose]: ...
 
 
-class CasinoBalanceProtocol(Protocol):
+class CasinoBalance(Protocol):
     """
     Интерфейс для словарной коллекции балансов (игрок/гусь -> баланс)
     """
