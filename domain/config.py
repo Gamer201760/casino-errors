@@ -19,6 +19,7 @@ class CasinoConfig:
     generate_goose_max_strenght: int = 30
     generate_goose_max_honk_volume: int = 30
 
+    casino_base_bal: int = 100
     bet_min: int = 1
     bet_max_fraction: float = 0.30
     bet_win_multiplier_max: int = 4

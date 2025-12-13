@@ -102,11 +102,3 @@ class CasinoStatistic(Protocol):
         effects: list[Effect],
         casino_bank: int,
     ) -> None: ...
-
-    def report(
-        self,
-        *,
-        players: PlayerCollection,
-        geese: GooseCollection,
-        casino_bank: int,
-    ) -> str: ...

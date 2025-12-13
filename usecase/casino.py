@@ -38,7 +38,6 @@ class Casino:
         *,
         stat: CasinoStatistic,
         config: CasinoConfig | None = None,
-        balance: int = 0,
         effects: EffectEngine | None = None,
     ) -> None:
         self._players = players
@@ -46,9 +45,9 @@ class Casino:
         self._balances = balances
         self._stat = stat
 
-        self.balance = balance
         self._config = (config or CasinoConfig()).with_defaults()
         self._rng = random.Random(self._config.seed)
+        self.balance = self._config.casino_base_bal
 
         self._effects = effects or EffectEngine()
         self._step = 0

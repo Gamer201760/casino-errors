@@ -1,12 +1,13 @@
 import logging
 
+from adapter.cli.report import print_statistic_report
+from adapter.cli.simulation import run_simulation
 from domain.config import CasinoConfig
 from repository.casino_balance import InMemoryCasinoBalance
 from repository.goose_collection import InMemoryGooseCollection
 from repository.player_collection import InMemoryPlayerCollection
 from repository.stats import Statistic
 from usecase.casino import Casino
-from utils.random import gen_random_geese, gen_random_players
 
 logging.basicConfig(
     level=logging.INFO,
@@ -16,23 +17,6 @@ logging.basicConfig(
 )
 
 logger = logging.getLogger(__name__)
-
-
-def run_simulation(casino: Casino, *, steps: int = 20) -> None:
-    for p in gen_random_players(casino._config):
-        casino.register_player(p)
-
-    for g in gen_random_geese(casino._config):
-        casino.register_goose(g)
-
-    for _ in range(steps):
-        casino.step()
-
-    logger.info(
-        casino._stat.report(
-            players=casino._players, geese=casino._geese, casino_bank=casino.balance
-        )
-    )
 
 
 def main():
@@ -45,8 +29,14 @@ def main():
     balance = InMemoryCasinoBalance()
     stats = Statistic()
 
-    casino = Casino(players, goose, balance, stat=stats, balance=100, config=cfg)
+    casino = Casino(players, goose, balance, stat=stats, config=cfg)
     run_simulation(casino, steps=200)
+    print_statistic_report(
+        stats,
+        players=players,
+        geese=goose,
+        casino_bank=casino.balance,
+    )
 
 
 if __name__ == '__main__':
