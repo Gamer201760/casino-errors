@@ -79,16 +79,16 @@ class HonkGoose(Goose):
         иначе оглушает самого себя
         """
         logger.info(
-            f'кричащий гусь {self.name} оглушил игрока {player.name}, он становиться неактивным на {self._stun_turns()} ходов'
+            f'кричащий гусь {self.name} оглушил игрока {player.name}, он становиться неактивным на {self._stun_turns() - 1} ходов'
         )
 
         return [
-            StunEffect(source=self, target=player, duration=self._stun_turns() + 1),
+            StunEffect(source=self, target=player, duration=self._stun_turns()),
         ]
 
     def act_self(self) -> list[Effect]:
         logger.info(
-            f'кричащий гусь {self.name} случайно оглушил сам себя, он становиться неактивным на {self._stun_turns()} ходов'
+            f'кричащий гусь {self.name} случайно оглушил сам себя, он становиться неактивным на {self._stun_turns() - 1} ходов'
         )
         return [
             StunEffect(source=self, target=self, duration=self._stun_turns()),
