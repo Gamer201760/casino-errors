@@ -38,7 +38,9 @@ class WarGoose(Goose):
         """
         steal = min(self.strength, player.balance)
 
-        logger.info(f'атакующий гусь {self.name} зарезал игрока {player.name}')
+        logger.info(
+            f'атакующий гусь {self.name} зарезал игрока {player.name}, забрал {self.strength} денег'
+        )
         return [
             # игрок теряет деньги
             OnceStealBalance(source=self, target=player, delta=-steal),
@@ -51,7 +53,7 @@ class WarGoose(Goose):
         if lost <= 0:
             return []
 
-        logger.info(f'атакующий гусь {self.name}, случайно зарезал сам себя')
+        logger.info(f'атакующий гусь {self.name} случайно зарезал сам себя')
         return [
             OnceStealBalance(source=self, target=self, delta=-lost),
         ]
@@ -70,7 +72,7 @@ class HonkGoose(Goose):
     balance: int = 0
 
     def _stun_turns(self) -> int:
-        return max(1, self.honk_volume // 10)
+        return max(2, self.honk_volume // 10)
 
     def act_player(self, player: Player) -> list[Effect]:
         """
