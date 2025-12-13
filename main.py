@@ -1,3 +1,4 @@
+import argparse
 import logging
 
 from adapter.cli.report import print_statistic_report
@@ -13,13 +14,29 @@ logging.basicConfig(
     level=logging.INFO,
     format='[%(levelname)s] - %(asctime)s - %(message)s',
     datefmt='%Y-%m-%d %H:%M:%S',
-    filename='main.log',
+    filename='casino.log',
 )
 
 logger = logging.getLogger(__name__)
 
 
-def main():
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description='Симуляция казино с гусями',
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+    )
+    parser.add_argument(
+        '--steps',
+        type=int,
+        default=200,
+        help='количество шагов симуляции',
+    )
+    return parser.parse_args()
+
+
+def main() -> None:
+    args = parse_args()
+
     logger.info('Hello from casino!')
     cfg = CasinoConfig.from_file('config.yaml')
     logger.debug(f'Конфиг загружен {cfg}')
@@ -30,7 +47,7 @@ def main():
     stats = Statistic()
 
     casino = Casino(players, goose, balance, stat=stats, config=cfg)
-    run_simulation(casino, steps=200)
+    run_simulation(casino, steps=args.steps)
     print_statistic_report(
         stats,
         players=players,
