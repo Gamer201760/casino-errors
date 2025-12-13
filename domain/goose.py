@@ -1,11 +1,12 @@
 from dataclasses import dataclass
-from typing import Protocol
+from typing import Protocol, runtime_checkable
 
 from domain.effect import Effect, OnceStealBalance, StunEffect
 from domain.entity import Entity
 from domain.player import Player
 
 
+@runtime_checkable
 class Goose(Entity, Protocol):
     name: str
     lucky: int
