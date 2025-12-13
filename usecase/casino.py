@@ -41,7 +41,7 @@ class Casino:
         self._balances = balances
 
         self.balance = balance
-        self._config = config if config is not None else CasinoConfig()
+        self._config = (config or CasinoConfig()).with_defaults()
         self._rng = random.Random(seed)
 
         self._effects = effects or EffectEngine()

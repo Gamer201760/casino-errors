@@ -19,10 +19,17 @@ class CasinoConfig:
     flock_min_size: int = 2
     flock_max_size: int = 4
 
-    event_weights: dict[str, int] = {
-        'bet': 60,
-        'goose_attack': 40,
-        'flock_create': 10,
-        'flock_disband': 5,
-        'panic': 5,
-    }
+    event_weights: dict[str, int] = None  # type: ignore[assignment]
+
+    def with_defaults(self) -> 'CasinoConfig':
+        if self.event_weights is not None:
+            return self
+        return CasinoConfig(
+            event_weights={
+                'bet': 60,
+                'goose_attack': 40,
+                'flock_create': 10,
+                'flock_disband': 5,
+                'panic': 5,
+            },
+        )
