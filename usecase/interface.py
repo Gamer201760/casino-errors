@@ -1,5 +1,7 @@
 from typing import Iterator, Protocol, overload
 
+from domain.effect import Effect
+from domain.engine import EffectEngine
 from domain.goose import Goose
 from domain.player import Player
 
@@ -46,3 +48,65 @@ class CasinoBalance(Protocol):
     def __delitem__(self, key: str) -> None: ...
     def __iter__(self) -> Iterator[str]: ...
     def __len__(self) -> int: ...
+
+
+class CasinoStatistic(Protocol):
+    """Интерфейс для статистики игры"""
+
+    def on_init(
+        self,
+        *,
+        players: PlayerCollection,
+        geese: GooseCollection,
+        casino_bank: int,
+    ) -> None: ...
+
+    def on_step_begin(
+        self,
+        *,
+        step: int,
+        players: PlayerCollection,
+        geese: GooseCollection,
+        effects: EffectEngine,
+        casino_bank: int,
+    ) -> None: ...
+
+    def on_event_selected(self, *, step: int, event_name: str) -> None: ...
+
+    def on_bet(
+        self,
+        *,
+        step: int,
+        player: Player,
+        bet: int,
+        win: bool,
+        multiplier: int,
+        payout: int,
+        casino_bank: int,
+    ) -> None: ...
+
+    def on_attack(
+        self,
+        *,
+        step: int,
+        goose: Goose,
+        attacked_self: bool,
+    ) -> None: ...
+
+    def on_flock_create(self, *, step: int, size: int) -> None: ...
+
+    def on_tick_end(
+        self,
+        *,
+        step: int,
+        effects: list[Effect],
+        casino_bank: int,
+    ) -> None: ...
+
+    def report(
+        self,
+        *,
+        players: PlayerCollection,
+        geese: GooseCollection,
+        casino_bank: int,
+    ) -> str: ...
