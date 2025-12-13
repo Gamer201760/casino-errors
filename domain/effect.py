@@ -8,6 +8,10 @@ from domain.player import BalanceInterface
 class Effect(Protocol):
     duration: int
 
+    @property
+    def target(self) -> Entity:
+        raise NotImplementedError
+
     def on_tick(self) -> None:
         """
         Глобальный тик для конкретного эффекта

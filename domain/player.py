@@ -4,7 +4,7 @@ from typing import Protocol
 from domain.entity import Entity
 
 
-class BalanceInterface(Protocol):
+class BalanceInterface(Entity, Protocol):
     balance: int
 
     def change_balance(self, delta: int) -> None:

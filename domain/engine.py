@@ -8,8 +8,8 @@ class EffectEngine:
     def __init__(self) -> None:
         self._effects: dict[str, list[Effect]] = {}
 
-    def add_effect(self, target: Entity, effect: Effect) -> None:
-        key = self._key_of_target(target)
+    def add_effect(self, effect: Effect) -> None:
+        key = self._key_of_target(effect.target)
         bucket = self._effects.get(key)
         if bucket is None:
             self._effects[key] = [effect]

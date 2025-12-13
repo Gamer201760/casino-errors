@@ -1,12 +1,14 @@
 from dataclasses import dataclass
 
 from domain.engine import EffectEngine
+from domain.entity import Entity
 from domain.goose import Goose, WarGoose
 from domain.player import Player
 
 
 @dataclass
 class MockEffect:
+    target: Entity
     duration: int
     ticked: int = 0
 
@@ -19,6 +21,7 @@ class MockEffect:
 class AnotherEffect:
     """Нужен для проверки фильтрации по типу"""
 
+    target: Entity
     duration: int = 1
 
     def on_tick(self) -> None:
@@ -26,9 +29,9 @@ class AnotherEffect:
 
 
 def test_add_and_check_effect_found(engine: EffectEngine, player_zero: Player) -> None:
-    effect = MockEffect(duration=2)
+    effect = MockEffect(target=player_zero, duration=2)
 
-    engine.add_effect(player_zero, effect)
+    engine.add_effect(effect)
 
     assert engine.check_effect(player_zero, MockEffect) is True
 
@@ -36,8 +39,8 @@ def test_add_and_check_effect_found(engine: EffectEngine, player_zero: Player) -
 def test_check_effect_not_found_by_type(
     engine: EffectEngine, player_zero: Player
 ) -> None:
-    effect = MockEffect(duration=2)
-    engine.add_effect(player_zero, effect)
+    effect = MockEffect(target=player_zero, duration=2)
+    engine.add_effect(effect)
 
     # Эффект есть, но другого типа
     assert engine.check_effect(player_zero, AnotherEffect) is False
@@ -46,16 +49,16 @@ def test_check_effect_not_found_by_type(
 def test_check_effect_not_found_for_other_entity(
     engine: EffectEngine, player_zero: Player, war1: Goose
 ) -> None:
-    effect = MockEffect(duration=5)
-    engine.add_effect(player_zero, effect)
+    effect = MockEffect(target=player_zero, duration=5)
+    engine.add_effect(effect)
 
     # У гуся эффекта быть не должно
     assert engine.check_effect(war1, MockEffect) is False
 
 
 def test_tick_calls_on_tick(engine: EffectEngine, player_zero: Player) -> None:
-    effect = MockEffect(duration=5)
-    engine.add_effect(player_zero, effect)
+    effect = MockEffect(target=player_zero, duration=5)
+    engine.add_effect(effect)
 
     engine.tick()
 
@@ -67,8 +70,8 @@ def test_tick_removes_expired_effects(
     engine: EffectEngine, player_zero: Player
 ) -> None:
     # Эффект с длительностью 1 после тика станет 0 и должен удалиться
-    effect = MockEffect(duration=1)
-    engine.add_effect(player_zero, effect)
+    effect = MockEffect(target=player_zero, duration=1)
+    engine.add_effect(effect)
 
     engine.tick()
 
@@ -81,8 +84,8 @@ def test_tick_removes_expired_effects(
 
 
 def test_tick_keeps_active_effects(engine: EffectEngine, player_zero: Player) -> None:
-    effect = MockEffect(duration=2)
-    engine.add_effect(player_zero, effect)
+    effect = MockEffect(target=player_zero, duration=2)
+    engine.add_effect(effect)
 
     engine.tick()
 
@@ -91,11 +94,11 @@ def test_tick_keeps_active_effects(engine: EffectEngine, player_zero: Player) ->
 
 
 def test_multiple_effects_management(engine: EffectEngine, player_zero: Player) -> None:
-    short_effect = MockEffect(duration=1)
-    long_effect = MockEffect(duration=5)
+    short_effect = MockEffect(target=player_zero, duration=1)
+    long_effect = MockEffect(target=player_zero, duration=5)
 
-    engine.add_effect(player_zero, short_effect)
-    engine.add_effect(player_zero, long_effect)
+    engine.add_effect(short_effect)
+    engine.add_effect(long_effect)
 
     engine.tick()
 
@@ -115,8 +118,8 @@ def test_check_effect_ignores_zero_duration(
     engine: EffectEngine, player_zero: Player
 ) -> None:
     # эффект добавлен, но у него уже 0 (или стало 0 до тика)
-    effect = MockEffect(duration=0)
-    engine.add_effect(player_zero, effect)
+    effect = MockEffect(target=player_zero, duration=0)
+    engine.add_effect(effect)
 
     # check_effect должен проверять duration > 0
     assert engine.check_effect(player_zero, MockEffect) is False
