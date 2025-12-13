@@ -1,6 +1,6 @@
 import logging
-import random
 
+from domain.config import CasinoConfig
 from domain.goose import HonkGoose, WarGoose
 from domain.player import Player
 from repository.casino_balance import InMemoryCasinoBalance
@@ -17,51 +17,10 @@ logging.basicConfig(
 
 logger = logging.getLogger(__name__)
 
-names = [
-    'Вадим',
-    'Валентин',
-    'Валерий',
-    'Василий',
-    'Виктор',
-    'Виталий',
-    'Владимир',
-    'Владислав',
-    'Всеволод',
-    'Вячеслав',
-    'Максим',
-    'Матвей',
-    'Михаил',
-    'Павел',
-    'Пётр',
-    'Анна',
-    'Мария',
-    'Елена',
-    'Ольга',
-    'Татьяна',
-    'Наталья',
-    'Екатерина',
-    'Ирина',
-    'Светлана',
-    'Юлия',
-    'Дарья',
-    'Анастасия',
-    'Ксения',
-    'Марина',
-    'Алёна',
-]
-
-
-def gen_random_player(name: str, max_bal: int = 100) -> Player:
-    return Player(name=name, balance=random.randint(1, 100))
-
-
-def gen_random_players() -> list[Player]:
-    players = []
-    return players
-
 
 def main():
     logger.info('Hello from casino!')
+    cfg = CasinoConfig.from_file('config.yaml')
 
     players = InMemoryPlayerCollection()
     players.add(Player(name='Azamat', balance=100, lucky=1))
@@ -72,7 +31,7 @@ def main():
 
     balance = InMemoryCasinoBalance()
 
-    casino = Casino(players, goose, balance, balance=100)
+    casino = Casino(players, goose, balance, balance=100, config=cfg)
     run_simulation(casino)
 
 

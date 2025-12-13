@@ -32,7 +32,6 @@ class Casino:
         balances: CasinoBalance,
         *,
         config: CasinoConfig | None = None,
-        seed: int | None = None,
         balance: int = 0,
         effects: EffectEngine | None = None,
     ) -> None:
@@ -42,7 +41,7 @@ class Casino:
 
         self.balance = balance
         self._config = (config or CasinoConfig()).with_defaults()
-        self._rng = random.Random(seed)
+        self._rng = random.Random(self._config.seed)
 
         self._effects = effects or EffectEngine()
         self._step = 0
@@ -272,7 +271,6 @@ class Casino:
             return
 
 
-def run_simulation(casino: Casino, *, steps: int = 20, seed: int | None = None) -> None:
-    casino._rng = random.Random(seed)
+def run_simulation(casino: Casino, *, steps: int = 20) -> None:
     for _ in range(steps):
         casino.step()

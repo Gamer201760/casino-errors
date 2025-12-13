@@ -1,5 +1,5 @@
-# Сид
-seed: 1
+# Сид, если < 1, то сид рандомный
+seed: 0
 
 # Игроки
 
@@ -10,7 +10,7 @@ generate_player_count: 30
 generate_player_max_bal: 100 
 
 # Потолок для генерации удачи игрока
-generate_player_lucky_bal: 40 
+generate_player_max_lucky: 40 
 
 # Гуси
 
@@ -21,7 +21,7 @@ generate_goose_count: 30
 generate_war_goose_p: 0.5
 
 # Потолок для генерации удачи гуся
-generate_goose_lucky_bal: 20 
+generate_goose_max_lucky: 20 
 
 # Потолок для генерации базового баланса гуся
 generate_goose_max_bal: 100
