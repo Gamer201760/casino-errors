@@ -9,7 +9,12 @@ from domain.engine import EffectEngine
 from domain.entity import Entity
 from domain.goose import FlockGoose, Goose, HonkGoose, WarGoose
 from domain.player import Player
-from usecase.interface import CasinoBalance, GooseCollection, PlayerCollection
+from usecase.interface import (
+    CasinoBalance,
+    CasinoStatistic,
+    GooseCollection,
+    PlayerCollection,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -31,6 +36,7 @@ class Casino:
         geese: GooseCollection,
         balances: CasinoBalance,
         *,
+        stat: CasinoStatistic,
         config: CasinoConfig | None = None,
         balance: int = 0,
         effects: EffectEngine | None = None,
@@ -38,6 +44,7 @@ class Casino:
         self._players = players
         self._geese = geese
         self._balances = balances
+        self._stat = stat
 
         self.balance = balance
         self._config = (config or CasinoConfig()).with_defaults()
@@ -61,9 +68,21 @@ class Casino:
 
         self._sync_bank()
 
+        self._stat.on_init(
+            players=self._players, geese=self._geese, casino_bank=self.balance
+        )
+
     def step(self) -> None:
         self._step += 1
         logger.info(f'шаг {self._step} начало')
+
+        self._stat.on_step_begin(
+            step=self._step,
+            players=self._players,
+            geese=self._geese,
+            effects=self._effects,
+            casino_bank=self.balance,
+        )
 
         event_name = self._pick_event_name()
         logger.info(f'шаг {self._step} событие {event_name}')
@@ -78,7 +97,11 @@ class Casino:
         self._sync_by_effects(effects)
         self._sync_bank()
 
-        logger.info(f'шаг {self._step} конец банк {self.balance}')
+        self._stat.on_tick_end(
+            step=self._step, effects=effects, casino_bank=self.balance
+        )
+
+        logger.info(f'шаг {self._step} конец, банк {self.balance}')
 
     def register_player(self, player: Player) -> None:
         self._players.add(player)
@@ -117,6 +140,15 @@ class Casino:
         if not win:
             logger.info(f'результат ставки: проигрыш игрок {player.name}')
             self._sync_entity(player)
+            self._stat.on_bet(
+                step=self._step,
+                player=player,
+                bet=chip.value,
+                win=False,
+                multiplier=0,
+                payout=0,
+                casino_bank=self.balance,
+            )
             return []
 
         # выплата случайный множитель
@@ -131,6 +163,16 @@ class Casino:
             f'результат ставки: выигрыш игрок {player.name} множитель {mult} выплата {payout}'
         )
         self._sync_entity(player)
+
+        self._stat.on_bet(
+            step=self._step,
+            player=player,
+            bet=chip.value,
+            win=True,
+            multiplier=mult,
+            payout=payout,
+            casino_bank=self.balance,
+        )
         return []
 
     def _event_goose_attack(self) -> list[Effect]:
@@ -143,6 +185,8 @@ class Casino:
 
         p_self = self._self_attack_probability(goose, player)
         self_attack = self._rng.random() < p_self
+
+        self._stat.on_attack(step=self._step, goose=goose, attacked_self=self_attack)
 
         if self_attack:
             logger.info(f'гусь {goose.name} атаковал сам себя')
@@ -170,6 +214,7 @@ class Casino:
 
         self._geese.add(flock)
         logger.info(f'стая создана размер {k} имя {flock.name}')
+        self._stat.on_flock_create(step=self._step, size=k)
         return []
 
     def _event_flock_disband(self) -> list[Effect]:
@@ -251,6 +296,7 @@ class Casino:
     def _sync_by_effects(self, effects: list[object]) -> None:
         for eff in effects:
             if isinstance(eff, OnceStealBalance):
+                self._sync_entity(eff.source)
                 self._sync_entity(eff.target)
 
     def _sync_bank(self) -> None:
