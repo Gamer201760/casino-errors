@@ -35,9 +35,9 @@ class WarGoose(Goose):
         steal = min(self.strength, player.balance)
 
         return [
-            # Игрок теряет деньги
+            # игрок теряет деньги
             OnceStealBalance(source=self, target=player, delta=-steal),
-            # Гусь получает доход
+            # гусь получает доход
             OnceStealBalance(source=self, target=self, delta=steal),
         ]
 
@@ -163,14 +163,14 @@ class FlockGoose(Goose):
     def act_player(self, player: Player) -> list[Effect]:
         effects: list[Effect] = []
 
-        # 1. стан игрока на среднюю громкость всех HonkGoose
+        # стан игрока на среднюю громкость всех HonkGoose
         if self._honk_volume > 0:
             stun_turns = max(1, self._honk_volume // 10)
             effects.append(
                 StunEffect(source=self, target=player, duration=stun_turns),
             )
 
-        # 2. украсть min(_strength, player.balance)
+        # украсть min(_strength, player.balance)
         steal = min(self._strength, player.balance)
         if steal > 0:
             effects.append(
@@ -189,7 +189,7 @@ class FlockGoose(Goose):
     def act_self(self) -> list[Effect]:
         effects: list[Effect] = []
 
-        # 1. стан каждого гуся на среднюю громкость HonkGoose
+        # стан каждого гуся на среднюю громкость HonkGoose
         if self._honk_volume > 0:
             stun_turns = max(1, self._honk_volume // 10)
             for g in self.geese:
@@ -197,7 +197,7 @@ class FlockGoose(Goose):
                     StunEffect(source=self, target=g, duration=stun_turns),
                 )
 
-        # 2. у каждого WarGoose забираем min(balance, _strength)
+        # у каждого WarGoose забираем min(balance, _strength)
         if self._strength > 0:
             for w in self.war:
                 lost = min(w.balance, self._strength)
