@@ -11,7 +11,7 @@
 ## Установка
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/Gamer201760/casino.git
 cd casino
 make install
 ```
