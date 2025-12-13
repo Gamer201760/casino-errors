@@ -20,7 +20,8 @@ class InMemoryCasinoBalance(CasinoBalance):
         return self._data[key]
 
     def __setitem__(self, key: str, value: int) -> None:
-        logger.info(f'[BALANCE UPDATE] {key}: {self._data.get(key, 0)} -> {value}')
+        if self._data.get(key, 0) != value:
+            logger.info(f'[BALANCE UPDATE] {key}: {self._data.get(key, 0)} -> {value}')
         self._data[key] = value
 
     def __delitem__(self, key: str) -> None:

@@ -41,7 +41,7 @@ class Casino:
         self._balances = balances
 
         self.balance = balance
-        self._config = (config or CasinoConfig()).with_defaults()
+        self._config = config if config is not None else CasinoConfig()
         self._rng = random.Random(seed)
 
         self._effects = effects or EffectEngine()
@@ -54,6 +54,11 @@ class Casino:
             'flock_disband': self._event_flock_disband,
             'panic': self._event_panic,
         }
+
+        for p in players:
+            self._sync_entity(p)
+        for g in geese:
+            self._sync_entity(g)
 
         self._sync_bank()
 
@@ -113,13 +118,11 @@ class Casino:
         if not win:
             logger.info(f'результат ставки: проигрыш игрок {player.name}')
             self._sync_entity(player)
-            self._sync_bank()
             return []
 
         # выплата случайный множитель
         mult = self._rng.randint(1, max(1, self._config.bet_win_multiplier_max))
         payout = chip.value * mult
-        payout = min(payout, self.balance)
 
         # казино платит из банка
         self.balance -= payout
@@ -129,7 +132,6 @@ class Casino:
             f'результат ставки: выигрыш игрок {player.name} множитель {mult} выплата {payout}'
         )
         self._sync_entity(player)
-        self._sync_bank()
         return []
 
     def _event_goose_attack(self) -> list[Effect]:
@@ -144,12 +146,10 @@ class Casino:
         self_attack = self._rng.random() < p_self
 
         if self_attack:
-            logger.info(f'атака на себя гусь {goose.name} p {p_self:.2f}')
+            logger.info(f'гусь {goose.name} атаковал сам себя')
             return goose.act_self()
 
-        logger.info(
-            f'атака игрока гусь {goose.name} игрок {player.name} p {p_self:.2f}'
-        )
+        logger.info(f'гусь {goose.name} атаковал игрока {player.name}')
         return goose.act_player(player)
 
     def _event_flock_create(self) -> list[Effect]:
@@ -199,16 +199,15 @@ class Casino:
         p = self._panic_probability(player)
         ok = self._rng.random() < p
         if not ok:
-            logger.info(f'паники нет игрок {player.name} p={p:.2f}')
+            logger.info(f'игрок {player.name} справился с паникой')
             return []
 
         lost = player.balance
         player.change_balance(-lost)
         self.balance += lost
 
-        logger.info(f'паника игрок {player.name} потеряно {lost}')
+        logger.info(f'игрок {player.name} запаниковал, потеряно {lost}')
         self._sync_entity(player)
-        self._sync_bank()
         return []
 
     def _pick_event_name(self) -> str:
@@ -253,7 +252,6 @@ class Casino:
     def _sync_by_effects(self, effects: list[object]) -> None:
         for eff in effects:
             if isinstance(eff, OnceStealBalance):
-                self._sync_entity(eff.source)
                 self._sync_entity(eff.target)
 
     def _sync_bank(self) -> None:
@@ -268,9 +266,13 @@ class Casino:
             self._balances[f'goose:{entity.name}'] = entity.balance
             return
 
+        if isinstance(entity, FlockGoose):
+            for w in entity.war:
+                self._balances[f'goose:{w.name}'] = w.balance
+            return
+
 
 def run_simulation(casino: Casino, *, steps: int = 20, seed: int | None = None) -> None:
-    # seed даёт одинаковую последовательность событий
     casino._rng = random.Random(seed)
     for _ in range(steps):
         casino.step()

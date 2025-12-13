@@ -1,9 +1,12 @@
 from dataclasses import dataclass
+from logging import getLogger
 from typing import Protocol, runtime_checkable
 
 from domain.effect import Effect, OnceStealBalance, StunEffect
 from domain.entity import Entity
 from domain.player import Player
+
+logger = getLogger(__name__)
 
 
 @runtime_checkable
@@ -35,6 +38,7 @@ class WarGoose(Goose):
         """
         steal = min(self.strength, player.balance)
 
+        logger.info(f'атакующий гусь {self.name} зарезал игрока {player.name}')
         return [
             # игрок теряет деньги
             OnceStealBalance(source=self, target=player, delta=-steal),
@@ -46,6 +50,8 @@ class WarGoose(Goose):
         lost = min(self.strength, self.balance)
         if lost <= 0:
             return []
+
+        logger.info(f'атакующий гусь {self.name}, случайно зарезал сам себя')
         return [
             OnceStealBalance(source=self, target=self, delta=-lost),
         ]
@@ -72,11 +78,18 @@ class HonkGoose(Goose):
         на него влияет удача гуся - удача игрока,
         иначе оглушает самого себя
         """
+        logger.info(
+            f'кричащий гусь {self.name} оглушил игрока {player.name}, он становиться неактивным на {self._stun_turns()} ходов'
+        )
+
         return [
-            StunEffect(source=self, target=player, duration=self._stun_turns()),
+            StunEffect(source=self, target=player, duration=self._stun_turns() + 1),
         ]
 
     def act_self(self) -> list[Effect]:
+        logger.info(
+            f'кричащий гусь {self.name} случайно оглушил сам себя, он становиться неактивным на {self._stun_turns()} ходов'
+        )
         return [
             StunEffect(source=self, target=self, duration=self._stun_turns()),
         ]
@@ -197,6 +210,9 @@ class FlockGoose(Goose):
                 effects.append(
                     StunEffect(source=self, target=g, duration=stun_turns),
                 )
+            effects.append(
+                StunEffect(source=self, target=self, duration=stun_turns),
+            )
 
         # у каждого WarGoose забираем min(balance, _strength)
         if self._strength > 0:
