@@ -104,7 +104,7 @@ class HonkGoose(Goose):
 
 class FlockGoose(Goose):
     def __init__(self, name: str, geese: list[Goose]) -> None:
-        self.name = name
+        self.name = 'Стая' + name
 
         self.geese: list[Goose] = []
         self.war: list[WarGoose] = []

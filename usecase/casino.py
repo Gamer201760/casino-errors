@@ -85,6 +85,7 @@ class Casino:
         )
 
         event_name = self._pick_event_name()
+        self._stat.on_event_selected(step=self._step, event_name=event_name)
         logger.info(f'шаг {self._step} событие {event_name}')
 
         effects = self._events[event_name]()
@@ -106,11 +107,17 @@ class Casino:
     def register_player(self, player: Player) -> None:
         self._players.add(player)
         self._sync_entity(player)
+        self._stat.on_init(
+            players=self._players, geese=self._geese, casino_bank=self.balance
+        )
         logger.info(f'игрок {player.name} добавлен')
 
     def register_goose(self, goose: Goose) -> None:
         self._geese.add(goose)
         self._sync_entity(goose)
+        self._stat.on_init(
+            players=self._players, geese=self._geese, casino_bank=self.balance
+        )
         logger.info(f'гусь {goose.name} добавлен')
 
     def _event_bet(self) -> list[Effect]:

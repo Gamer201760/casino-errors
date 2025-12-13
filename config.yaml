@@ -38,25 +38,25 @@ generate_goose_max_honk_volume: 30
 bet_min: 1
 
 # Максимальная ставка как доля от текущего баланса (0.0..1.0)
-bet_max_fraction: 0.30
+bet_max_fraction: 0.70
 
 # Максимальный множитель выигрыша
-bet_win_multiplier_max: 4
+bet_win_multiplier_max: 2
 
 # Базовая вероятность выигрыша
-bet_win_base: 0.50
+bet_win_base: 0.30
 
 # Насколько удача масштабирует шанс выигрыша
 bet_win_lucky_scale: 0.01
 
 # Базовая вероятность потери денег при паники
-panic_base: 0.50
+panic_base: 0.80
 
 # Масштабирование паники от удачи
 panic_lucky_scale: 0.005
 
 # Базовая вероятность гуся атаковать самого себя
-self_attack_base: 0.15
+self_attack_base: 0.1
 
 # Масштабирование self-attack от удачи
 self_attack_lucky_scale: 0.01
@@ -65,7 +65,7 @@ self_attack_lucky_scale: 0.01
 flock_min_size: 2
 
 # Максимальный размер стаи
-flock_max_size: 4
+flock_max_size: 8
 
 # Веса событий (чем больше вес, тем чаще событие выбирается)
 event_weights:

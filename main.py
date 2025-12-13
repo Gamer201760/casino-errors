@@ -4,6 +4,7 @@ from domain.config import CasinoConfig
 from repository.casino_balance import InMemoryCasinoBalance
 from repository.goose_collection import InMemoryGooseCollection
 from repository.player_collection import InMemoryPlayerCollection
+from repository.stats import Statistic
 from usecase.casino import Casino
 from utils.random import gen_random_geese, gen_random_players
 
@@ -27,6 +28,12 @@ def run_simulation(casino: Casino, *, steps: int = 20) -> None:
     for _ in range(steps):
         casino.step()
 
+    logger.info(
+        casino._stat.report(
+            players=casino._players, geese=casino._geese, casino_bank=casino.balance
+        )
+    )
+
 
 def main():
     logger.info('Hello from casino!')
@@ -36,9 +43,10 @@ def main():
     players = InMemoryPlayerCollection()
     goose = InMemoryGooseCollection()
     balance = InMemoryCasinoBalance()
+    stats = Statistic()
 
-    casino = Casino(players, goose, balance, balance=100, config=cfg)
-    run_simulation(casino)
+    casino = Casino(players, goose, balance, stat=stats, balance=100, config=cfg)
+    run_simulation(casino, steps=200)
 
 
 if __name__ == '__main__':
