@@ -1,4 +1,5 @@
 import logging
+import random
 
 from domain.goose import HonkGoose, WarGoose
 from domain.player import Player
@@ -15,6 +16,48 @@ logging.basicConfig(
 )
 
 logger = logging.getLogger(__name__)
+
+names = [
+    'Вадим',
+    'Валентин',
+    'Валерий',
+    'Василий',
+    'Виктор',
+    'Виталий',
+    'Владимир',
+    'Владислав',
+    'Всеволод',
+    'Вячеслав',
+    'Максим',
+    'Матвей',
+    'Михаил',
+    'Павел',
+    'Пётр',
+    'Анна',
+    'Мария',
+    'Елена',
+    'Ольга',
+    'Татьяна',
+    'Наталья',
+    'Екатерина',
+    'Ирина',
+    'Светлана',
+    'Юлия',
+    'Дарья',
+    'Анастасия',
+    'Ксения',
+    'Марина',
+    'Алёна',
+]
+
+
+def gen_random_player(name: str, max_bal: int = 100) -> Player:
+    return Player(name=name, balance=random.randint(1, 100))
+
+
+def gen_random_players() -> list[Player]:
+    players = []
+    return players
 
 
 def main():

@@ -3,12 +3,12 @@ import random
 from typing import Callable
 
 from domain.chip import Chip
+from domain.config import CasinoConfig
 from domain.effect import Effect, OnceStealBalance, StunEffect
 from domain.engine import EffectEngine
 from domain.entity import Entity
 from domain.goose import FlockGoose, Goose, HonkGoose, WarGoose
 from domain.player import Player
-from usecase.config import CasinoConfig
 from usecase.interface import CasinoBalance, GooseCollection, PlayerCollection
 
 logger = logging.getLogger(__name__)
