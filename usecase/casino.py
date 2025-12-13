@@ -83,12 +83,12 @@ class Casino:
     def register_player(self, player: Player) -> None:
         self._players.add(player)
         self._sync_entity(player)
-        logger.info(f'игрок добавлен {player.name}')
+        logger.info(f'игрок {player.name} добавлен')
 
     def register_goose(self, goose: Goose) -> None:
         self._geese.add(goose)
         self._sync_entity(goose)
-        logger.info(f'гусь добавлен {goose.name}')
+        logger.info(f'гусь {goose.name} добавлен')
 
     def _event_bet(self) -> list[Effect]:
         # игрок под оглушением не может делать ставку
@@ -269,8 +269,3 @@ class Casino:
             for w in entity.war:
                 self._balances[f'goose:{w.name}'] = w.balance
             return
-
-
-def run_simulation(casino: Casino, *, steps: int = 20) -> None:
-    for _ in range(steps):
-        casino.step()
