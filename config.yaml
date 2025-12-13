@@ -7,7 +7,7 @@ seed: 0
 generate_player_count: 30
 
 # Потолок для генерации базового баланса игрока
-generate_player_max_bal: 100 
+generate_player_max_bal: 100
 
 # Потолок для генерации удачи игрока
 generate_player_max_lucky: 40 
@@ -40,19 +40,19 @@ casino_base_bal: 100
 bet_min: 1
 
 # Максимальная ставка как доля от текущего баланса (0.0..1.0)
-bet_max_fraction: 0.70
+bet_max_fraction: 1.0
 
 # Максимальный множитель выигрыша
 bet_win_multiplier_max: 2
 
 # Базовая вероятность выигрыша
-bet_win_base: 0.30
+bet_win_base: 0.40
 
 # Насколько удача масштабирует шанс выигрыша
 bet_win_lucky_scale: 0.01
 
 # Базовая вероятность потери денег при паники
-panic_base: 0.80
+panic_base: 0.50
 
 # Масштабирование паники от удачи
 panic_lucky_scale: 0.005
