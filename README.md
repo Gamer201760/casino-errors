@@ -3,6 +3,13 @@
 Репозиторий содержит набор ошибок в проекте [`Casino Simulation`](https://github.com/gamer201760/casino.git)\
 Каждая ошибка оформлена в отдельной ветке `error-{n}` и сопровождается собственным `README.md` с описанием
 
+## Навигация
+- [`error-1`](https://github.com/gamer201760/casino-errors/tree/error-1) – Нельзя создавать экземпляр интерфейса
+- [`error-2`](https://github.com/gamer201760/casino-errors/tree/error-2) – Обработка события panic без проверки игрока
+- [`error-3`](https://github.com/gamer201760/casino-errors/tree/error-3) – ...
+- [`error-4`](https://github.com/gamer201760/casino-errors/tree/error-4) – ...
+- [`error-5`](https://github.com/gamer201760/casino-errors/tree/error-5) – ...
+
 ## Как запускать примеры
 1. Клонировать репозиторий
 ```bash
