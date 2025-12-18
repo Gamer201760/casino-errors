@@ -1,6 +1,6 @@
 # Casino Errors
 
-Репозиторий содержит набор учебных примеров ошибок в проекте [`Casino Simulation`](https://github.com/gamer201760/casino.git)
+Репозиторий содержит набор ошибок в проекте [`Casino Simulation`](https://github.com/gamer201760/casino.git)\
 Каждая ошибка оформлена в отдельной ветке `error-{n}` и сопровождается собственным `README.md` с описанием
 
 ## Как запускать примеры
