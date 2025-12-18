@@ -239,7 +239,7 @@ class Casino:
         logger.info(f'стая распущена имя {flock.name} размер {flock.count}')
         return []
 
-    def _event_panic(self) -> list[object]:
+    def _event_panic(self) -> list[Effect]:
         # паника заставляет игрока потерять все деньги в пользу банка казино
         player = self._pick_player(require_balance=True, require_not_stunned=False)
         if player is None:
@@ -299,7 +299,7 @@ class Casino:
         p = self._config.self_attack_base - diff * self._config.self_attack_lucky_scale
         return clamp01(p)
 
-    def _sync_by_effects(self, effects: list[object]) -> None:
+    def _sync_by_effects(self, effects: list[Effect]) -> None:
         for eff in effects:
             if isinstance(eff, OnceStealBalance):
                 self._sync_entity(eff.source)
