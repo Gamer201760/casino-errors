@@ -6,9 +6,9 @@ from adapter.cli.simulation import run_simulation
 from domain.config import CasinoConfig
 from repository.casino_balance import InMemoryCasinoBalance
 from repository.goose_collection import InMemoryGooseCollection
+from repository.player_collection import InMemoryPlayerCollection
 from repository.stats import Statistic
 from usecase.casino import Casino
-from usecase.interface import PlayerCollection
 
 logging.basicConfig(
     level=logging.INFO,
@@ -41,7 +41,7 @@ def main() -> None:
     cfg = CasinoConfig.from_file('config.yaml')
     logger.debug(f'Конфиг загружен {cfg}')
 
-    players = PlayerCollection()
+    players = InMemoryPlayerCollection()
     goose = InMemoryGooseCollection()
     balance = InMemoryCasinoBalance()
     stats = Statistic()
