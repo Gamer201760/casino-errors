@@ -1,10 +1,10 @@
 # Сид, если < 1, то сид рандомный
-seed: 0
+seed: 1
 
 # Игроки
 
 # Кол-во рандомных игроков (max 30)
-generate_player_count: 30
+generate_player_count: 1
 
 # Потолок для генерации базового баланса игрока
 generate_player_max_bal: 300

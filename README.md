@@ -1,36 +1,53 @@
-### Ошибка {n} – ...
+### Ошибка 3 – Бесконечное оглушение
 Место: [`main.py`](main.py#L44), метод `main`
 
 Симптом:
-Приложение падает при создании `players = PlayerCollection()`, с ошибкой `TypeError: Protocols cannot be instantiated`
+Игроки перестают делать ставки \
+Если на игрока наложает эффект оглушение он будет бесконечным и игрок не сможет делать ставки
 
 Как воспроизвести:
-Запустить симуляцию `make run`
+Запустить симуляцию `make run` с конфигом:
+```yaml
+seed: 1
+generate_player_count: 1
+```
 
 Отладка: 
 - Установлен breakpoint на 44 строке
 - В отладчике видна ошибка и стэк вызывов
 
 Причина:
-Интерпретатор не позволяет создавать экземпляры классов, помеченных как `Protocol`. Протоколы описывают контракт и не предназначены для непосредственной инициализации
+`duration` не уменьшается при тике симуляции
 ```python
-players = PlayerCollection()
-...
-casino = Casino(players, goose, balance, stat=stats, config=cfg)
+@dataclass
+class StunEffect:
+    source: Entity
+    target: Entity
+    duration: int
+
+    def on_tick(self) -> None:
+        pass
 ```
 
 Исправление:
-Использовать конкретную реализацию коллекции 
+Уменьшать `duration` на 1 при тике 
 ```python
-players = InMemoryPlayerCollection()
-...
-casino = Casino(players, goose, balance, stat=stats, config=cfg)
+@dataclass
+class StunEffect:
+    source: Entity
+    target: Entity
+    duration: int
+
+    def on_tick(self) -> None:
+        # Просто тикает таймер
+        # Casino проверяет наличие StunEffect, чтобы запретить действия
+        self.duration -= 1
 ```
 
 Проверка:
 Симуляция запускается 
 
 Доказательства:
-- [Breakpoints](artefacts/error{n}-breakpoints.png)
-- [Stacktrace](artefacts/error{n}-stacktrace.png)
-- [Locals](artefacts/error{n}-locals.png)
+- [Breakpoints](artefacts/error3-breakpoints.png)
+- [Stacktrace](artefacts/error3-stacktrace.png)
+- [Locals](artefacts/error3-locals.png)

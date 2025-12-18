@@ -27,9 +27,7 @@ class StunEffect:
     duration: int
 
     def on_tick(self) -> None:
-        # Просто тикает таймер
-        # Casino проверяет наличие StunEffect, чтобы запретить действия
-        self.duration -= 1
+        pass
 
 
 class OnceStealBalance:
