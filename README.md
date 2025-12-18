@@ -1,4 +1,4 @@
-### Ошибка 1 – Нельзя создавать экземпляр интерфейса
+### Ошибка {n} – ...
 Место: [`main.py`](main.py#L44), метод `main`
 
 Симптом:
@@ -31,6 +31,6 @@ casino = Casino(players, goose, balance, stat=stats, config=cfg)
 Симуляция запускается 
 
 Доказательства:
-- [Breakpoints](artefacts/error1-breakpoints.png)
-- [Stacktrace](artefacts/error1-stacktrace.png)
-- [Locals](artefacts/error1-locals.png)
+- [Breakpoints](artefacts/error{n}-breakpoints.png)
+- [Stacktrace](artefacts/error{n}-stacktrace.png)
+- [Locals](artefacts/error{n}-locals.png)
