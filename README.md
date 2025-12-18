@@ -1,5 +1,5 @@
 ### Ошибка 1 – Нельзя создавать экземпляр интерфейса
-Место: `main.py`, метод `main`
+Место: [`main.py`](main.py#L44), метод `main`
 
 Симптом:
 Приложение падает при создании `players = PlayerCollection()`, с ошибкой `TypeError: Protocols cannot be instantiated`
