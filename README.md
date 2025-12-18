@@ -1,5 +1,5 @@
 ### Ошибка 1 – Нельзя создавать экземпляр интерфейса
-Место: [`main.py`](https://github.com/gamer201760/casino-errors/blob/error-1/main.py), метод `main`
+Место: [`main.py`](https://github.com/gamer201760/casino-errors/blob/error-1/main.py#L44), метод `main`
 
 Симптом:
 Приложение падает при создании `players = PlayerCollection()`, с ошибкой `TypeError: Protocols cannot be instantiated`
@@ -36,7 +36,7 @@ casino = Casino(players, goose, balance, stat=stats, config=cfg)
 - [Locals](artefacts/error1-locals.png)
 
 ### Ошибка 2 – Обработка события panic без проверки игрока
-Место: [`usecase/casino.py`](https://github.com/gamer201760/casino-errors/blob/error-2/usecase/casino.py), метод `_event_panic`
+Место: [`usecase/casino.py`](https://github.com/gamer201760/casino-errors/blob/error-2/usecase/casino.py#L244), метод `_event_panic`
 
 Симптом:
 Приложение падает с ошибкой `AttributeError: 'NoneType' object has no attribute 'lucky'`, если в казино не осталось игроков с положительным балансом, при событии паника
