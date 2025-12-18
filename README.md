@@ -1,5 +1,5 @@
 ### Ошибка 1 – Нельзя создавать экземпляр интерфейса
-Место: `main.py`, метод `main`
+Место: [`main.py`](main.py), метод `main`
 
 Симптом:
 Приложение падает при создании `players = PlayerCollection()`, с ошибкой `TypeError: Protocols cannot be instantiated`
@@ -42,7 +42,7 @@ casino = Casino(players, goose, balance, stat=stats, config=cfg)
 Приложение падает с ошибкой `AttributeError: 'NoneType' object has no attribute 'lucky'`, если в казино не осталось игроков с положительным балансом, при событии паника
 
 Как воспроизвести:
-Запустить симуляцию `make run`
+Запустить симуляцию `make run`\
 В конфиге выставить
 ```yaml
 seed: 1
