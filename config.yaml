@@ -1,5 +1,5 @@
 # Сид, если < 1, то сид рандомный
-seed: 0
+seed: 1
 
 # Игроки
 
@@ -15,7 +15,7 @@ generate_player_max_lucky: 10
 # Гуси
 
 # Кол-во рандомных гусей (max 30)
-generate_goose_count: 30
+generate_goose_count: 0
 
 # Вероятность генерации атакующего гуся
 generate_war_goose_p: 0.5
@@ -75,4 +75,4 @@ event_weights:
   goose_attack: 40  # Атака гуся
   flock_create: 10  # Создание стаи
   flock_disband: 5  # Распад стаи
-  panic: 5          # Паника
+  panic: 0          # Паника

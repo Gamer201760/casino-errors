@@ -137,7 +137,7 @@ class Casino:
         logger.info(f'ставка игрок {player.name} фишка {chip.value}')
 
         # деньги ставки уходят в банк казино
-        player.change_balance(-chip.value)
+        player.change_balance(chip.value)
         self.balance += chip.value
 
         win_p = self._bet_win_probability(player)
