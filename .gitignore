@@ -7,7 +7,6 @@ wheels/
 *.egg-info
 *.log
 .DS_STORE
-artefact/
 
 # Virtual environments
 .venv
