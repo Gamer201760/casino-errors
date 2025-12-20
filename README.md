@@ -16,7 +16,7 @@
 ```python
 players = PlayerCollection()
 ...
-casino = Casino(players, goose, balance, stat=stats, config=cfg)
+casino = Casino(players, goose, balance, rng=rng, stat=stats, config=cfg)
 ```
 
 Исправление:
@@ -24,7 +24,7 @@ casino = Casino(players, goose, balance, stat=stats, config=cfg)
 ```python
 players = InMemoryPlayerCollection()
 ...
-casino = Casino(players, goose, balance, stat=stats, config=cfg)
+casino = Casino(players, goose, balance, rng=rng, stat=stats, config=cfg)
 ```
 
 Проверка:
