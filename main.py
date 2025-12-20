@@ -47,7 +47,7 @@ def main() -> None:
     stats = Statistic()
 
     casino = Casino(players, goose, balance, stat=stats, config=cfg)
-    run_simulation(casino, steps=args.steps)
+    run_simulation(cfg, casino, steps=args.steps)
     print_statistic_report(
         stats,
         players=players,
