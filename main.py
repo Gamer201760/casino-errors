@@ -1,5 +1,6 @@
 import argparse
 import logging
+from random import Random
 
 from adapter.cli.report import print_statistic_report
 from adapter.cli.simulation import run_simulation
@@ -45,9 +46,10 @@ def main() -> None:
     goose = InMemoryGooseCollection()
     balance = InMemoryCasinoBalance()
     stats = Statistic()
+    rng = Random(cfg.seed)
 
-    casino = Casino(players, goose, balance, stat=stats, config=cfg)
-    run_simulation(cfg, casino, steps=args.steps)
+    casino = Casino(players, goose, balance, rng=rng, stat=stats, config=cfg)
+    run_simulation(cfg, casino, rng, steps=args.steps)
     print_statistic_report(
         stats,
         players=players,

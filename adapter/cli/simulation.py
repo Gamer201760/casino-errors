@@ -5,8 +5,9 @@ from domain.config import CasinoConfig
 from usecase.casino import Casino
 
 
-def run_simulation(cfg: CasinoConfig, casino: Casino, *, steps: int = 20) -> None:
-    rng = Random(cfg.seed)
+def run_simulation(
+    cfg: CasinoConfig, casino: Casino, rng: Random, *, steps: int = 20
+) -> None:
     for p in gen_random_players(cfg, rng):
         casino.register_player(p)
 
