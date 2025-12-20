@@ -40,23 +40,30 @@ NAMES = [
 
 def gen_random_player(
     name: str,
-    cfg: CasinoConfig,
+    rng: Random,
+    max_bal: int,
+    max_lucky: int,
 ) -> Player:
     return Player(
         name=name,
-        balance=Random(cfg.seed).randint(1, cfg.generate_player_max_bal),
-        lucky=Random(cfg.seed).randint(1, cfg.generate_goose_max_lucky),
+        balance=rng.randint(1, max_bal),
+        lucky=rng.randint(1, max_lucky),
     )
 
 
-def gen_random_players(cfg: CasinoConfig) -> list[Player]:
+def gen_random_players(cfg: CasinoConfig, rng: Random) -> list[Player]:
     if cfg.generate_player_count > len(NAMES):
         raise ValueError(
             f'generate_player_count={cfg.generate_player_count} больше чем доступных имён={len(NAMES)}'
         )
     return [
-        gen_random_player(name, cfg)
-        for name in Random(cfg.seed).sample(NAMES, cfg.generate_player_count)
+        gen_random_player(
+            name,
+            rng,
+            cfg.generate_player_max_bal,
+            cfg.generate_goose_max_lucky,
+        )
+        for name in rng.sample(NAMES, cfg.generate_player_count)
     ]
 
 
@@ -86,12 +93,11 @@ def gen_random_goose(
     )
 
 
-def gen_random_geese(cfg: CasinoConfig) -> list[Goose]:
+def gen_random_geese(cfg: CasinoConfig, rng: Random) -> list[Goose]:
     if cfg.generate_goose_count > len(NAMES):
         raise ValueError(
             f'generate_goose_count={cfg.generate_goose_count} больше чем доступных имён={len(NAMES)}'
         )
 
-    rng = Random(cfg.seed)
     chosen_names = rng.sample(NAMES, cfg.generate_goose_count)
     return [gen_random_goose(name, cfg, rng) for name in chosen_names]
