@@ -61,7 +61,7 @@ def gen_random_players(cfg: CasinoConfig, rng: Random) -> list[Player]:
             name,
             rng,
             cfg.generate_player_max_bal,
-            cfg.generate_goose_max_lucky,
+            cfg.generate_player_max_lucky,
         )
         for name in rng.sample(NAMES, cfg.generate_player_count)
     ]
