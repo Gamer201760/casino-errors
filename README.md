@@ -7,7 +7,7 @@
 - [`error-1`](https://github.com/gamer201760/casino-errors/tree/error-1) – Нельзя создавать экземпляр интерфейса
 - [`error-2`](https://github.com/gamer201760/casino-errors/tree/error-2) – Обработка события panic без проверки игрока
 - [`error-3`](https://github.com/gamer201760/casino-errors/tree/error-3) – Бесконечное оглушение
-- [`error-4`](https://github.com/gamer201760/casino-errors/tree/error-4) – ...
+- [`error-4`](https://github.com/gamer201760/casino-errors/tree/error-4) – Бесконечные деньги
 - [`error-5`](https://github.com/gamer201760/casino-errors/tree/error-5) – ...
 
 ## Как запускать примеры
