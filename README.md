@@ -8,7 +8,7 @@
 - [`error-2`](https://github.com/gamer201760/casino-errors/tree/error-2) – Обработка события panic без проверки игрока
 - [`error-3`](https://github.com/gamer201760/casino-errors/tree/error-3) – Бесконечное оглушение
 - [`error-4`](https://github.com/gamer201760/casino-errors/tree/error-4) – Бесконечные деньги
-- [`error-5`](https://github.com/gamer201760/casino-errors/tree/error-5) – ...
+- [`error-5`](https://github.com/gamer201760/casino-errors/tree/error-5) – Изменение коллекции во время итерации
 
 ## Как запускать примеры
 1. Клонировать репозиторий
