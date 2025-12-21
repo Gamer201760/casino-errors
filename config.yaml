@@ -71,8 +71,8 @@ flock_max_size: 8
 
 # Веса событий (чем больше вес, тем чаще событие выбирается)
 event_weights:
-  bet: 60           # Ставка
-  goose_attack: 40  # Атака гуся
-  flock_create: 10  # Создание стаи
-  flock_disband: 5  # Распад стаи
-  panic: 5          # Паника
+  bet: 0             # Ставка
+  goose_attack: 100  # Атака гуся
+  flock_create: 0    # Создание стаи
+  flock_disband: 0   # Распад стаи
+  panic: 0           # Паника

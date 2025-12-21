@@ -17,7 +17,7 @@ class EffectEngine:
         bucket.append(effect)
 
     def tick(self) -> None:
-        for key, bucket in list(self._effects.items()):
+        for key, bucket in self._effects.items():
             alive: list[Effect] = []
 
             for eff in bucket:

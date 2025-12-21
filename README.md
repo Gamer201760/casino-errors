@@ -1,36 +1,44 @@
-### Ошибка {n} – ...
-Место: [`main.py`](main.py#L44), метод `main`
+### Ошибка 5 – Изменение коллекции во время итерации
+Место: [`engine.py`](domain/engine.py#L19), метод `tick`
 
 Симптом:
-Приложение падает при создании `players = PlayerCollection()`, с ошибкой `TypeError: Protocols cannot be instantiated`
+Приложение падает с `RuntimeError: dictionary changed size during iteration` при удаление истёкших эффектов
 
 Как воспроизвести:
-Запустить симуляцию `make run`
+Запустить симуляцию `make run`, с конфигом:
+```yaml
+seed: 1
+event_weights:
+  bet: 0             # Ставка
+  goose_attack: 100  # Атака гуся
+  flock_create: 0    # Создание стаи
+  flock_disband: 0   # Распад стаи
+  panic: 0           # Паника
+```
+Этот конфиг гарантирует одинаковое поведение: каждый шаг = событие атаки 
 
 Отладка: 
-- Установлен breakpoint на 44 строке
-- В отладчике видна ошибка и стэк вызывов
+- Установлен breakpoint на 20 строке
+- В стэктрейсе видно: `RuntimeError: dictionary changed size during iteration`
 
 Причина:
-Интерпретатор не позволяет создавать экземпляры классов, помеченных как `Protocol`. Протоколы описывают контракт и не предназначены для непосредственной инициализации
+При итерации по словарю без копии ключей, удаление элемента внутри цикла изменяет размер словаря во время обхода
 ```python
-players = PlayerCollection()
+for key, bucket in self._effects.items():
 ...
-casino = Casino(players, goose, balance, stat=stats, config=cfg)
 ```
 
 Исправление:
-Использовать конкретную реализацию коллекции 
+Создать копию ключей с помощью `list` перед итерацией
 ```python
-players = InMemoryPlayerCollection()
+for key, bucket in list(self._effects.items()):
 ...
-casino = Casino(players, goose, balance, stat=stats, config=cfg)
 ```
 
 Проверка:
-Симуляция запускается 
+Симуляция проходит без `RuntimeError`, истёкшие эффекты корректно удаляются из словаря
 
 Доказательства:
-- [Breakpoints](artefacts/error{n}-breakpoints.png)
-- [Stacktrace](artefacts/error{n}-stacktrace.png)
-- [Locals](artefacts/error{n}-locals.png)
+- [Breakpoints](artefacts/error5-breakpoints.png)
+- [Stacktrace](artefacts/error5-stacktrace.png)
+- [Locals](artefacts/error5-locals.png)
