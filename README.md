@@ -47,6 +47,6 @@ self.balance += chip.value
 В итоговой статистике большинство игроков имеют отрицательную дельу баланса, а банк казино положительную
 
 Доказательства:
-- [Breakpoints](artefacts/error{n}-breakpoints.png)
-- [Stacktrace](artefacts/error{n}-stacktrace.png)
-- [Locals](artefacts/error{n}-locals.png)
+- [Breakpoints](artefacts/error4-breakpoints.png)
+- [Locals до списания ставки](artefacts/error4-locals-before.png)
+- [Locals после списания ставки](artefacts/error4-locals-after.png)
