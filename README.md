@@ -1,34 +1,50 @@
-### Ошибка {n} – ...
-Место: [`main.py`](main.py#L44), метод `main`
+### Ошибка 4 – Бесконечные деньги
+Место: [`casino.py`](usecase/casino.py#L141), метод `_event_bet`
 
 Симптом:
-Приложение падает при создании `players = PlayerCollection()`, с ошибкой `TypeError: Protocols cannot be instantiated`
+При ставке деньги не списываются
 
 Как воспроизвести:
-Запустить симуляцию `make run`
+Запустить симуляцию `make run` с конфигом:
+```yaml
+seed: 1
+bet_win_base: 0
+event_weights:
+  bet: 100           # Ставка
+  goose_attack: 0    # Атака гуся
+  flock_create: 0    # Создание стаи
+  flock_disband: 0   # Распад стаи
+  panic: 0           # Паника
+```
+Этот конфиг гарантирует одинаковое поведение: 
+каждый шаг = событие bet, каждая ставка = проигрыш
 
 Отладка: 
-- Установлен breakpoint на 44 строке
-- В отладчике видна ошибка и стэк вызывов
+- Установлен breakpoint на 141 строке
+- В отладчике до списания денег видно, что у player баланс 16, а ставка 11
+- После списания денег, у player стало 27, а должно 5
 
 Причина:
-Интерпретатор не позволяет создавать экземпляры классов, помеченных как `Protocol`. Протоколы описывают контракт и не предназначены для непосредственной инициализации
+Когда у игрока резервируют деньги для ставки их начисляют, а не снимают
 ```python
-players = PlayerCollection()
 ...
-casino = Casino(players, goose, balance, stat=stats, config=cfg)
+player.change_balance(chip.value)
+self.balance += chip.value
+...
 ```
 
 Исправление:
-Использовать конкретную реализацию коллекции 
+Поменять знак
 ```python
-players = InMemoryPlayerCollection()
 ...
-casino = Casino(players, goose, balance, stat=stats, config=cfg)
+player.change_balance(-chip.value)
+self.balance += chip.value
+...
 ```
 
 Проверка:
-Симуляция запускается 
+При постановке ставки баланс игрока уменьшается на величину ставки.\
+В итоговой статистике большинство игроков имеют отрицательную дельу баланса, а банк казино положительную
 
 Доказательства:
 - [Breakpoints](artefacts/error{n}-breakpoints.png)

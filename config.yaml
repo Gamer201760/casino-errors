@@ -15,7 +15,7 @@ generate_player_max_lucky: 10
 # Гуси
 
 # Кол-во рандомных гусей (max 30)
-generate_goose_count: 0
+generate_goose_count: 30
 
 # Вероятность генерации атакующего гуся
 generate_war_goose_p: 0.5
@@ -46,7 +46,7 @@ bet_max_fraction: 1.0
 bet_win_multiplier_max: 2
 
 # Базовая вероятность выигрыша
-bet_win_base: 0.40
+bet_win_base: 0
 
 # Насколько удача масштабирует шанс выигрыша
 bet_win_lucky_scale: 0.01
@@ -71,8 +71,8 @@ flock_max_size: 8
 
 # Веса событий (чем больше вес, тем чаще событие выбирается)
 event_weights:
-  bet: 60           # Ставка
-  goose_attack: 40  # Атака гуся
-  flock_create: 10  # Создание стаи
-  flock_disband: 5  # Распад стаи
-  panic: 0          # Паника
+  bet: 100           # Ставка
+  goose_attack: 0    # Атака гуся
+  flock_create: 0    # Создание стаи
+  flock_disband: 0   # Распад стаи
+  panic: 0           # Паника
